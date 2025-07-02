@@ -1,0 +1,18 @@
+# ignore all data and visuals
+data/
+visuals/
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+
+# Virtual envs
+venv/
+.venv/
+env/
+
+# Model checkpoints
+*.pth
+
+# Any on-disk caches
+core/cache/

@@ -1,0 +1,7 @@
+pytest
+torch
+transformers
+diffusers
+opencv-python
+pyyaml
+torchvision

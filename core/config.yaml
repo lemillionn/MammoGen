@@ -1,0 +1,76 @@
+paths:
+  # unpaired CycleGAN data
+  unpaired_rsna:    "data/unpaired/rsna"
+  unpaired_low:     "data/unpaired/low_energy_cesm"
+
+  # paired low→subtracted data
+  paired_low:       "data/paired/low_energy_cesm"
+  paired_sub:       "data/paired/subtracted_cesm"
+
+  # where to save/load checkpoints for both stages
+  checkpoints:      "data/outputs/checkpoints"
+  unet_checkpoints: "data/outputs/checkpoints_unet"
+
+  # sample outputs (optional)
+  output_low:       "data/outputs/synthetic_low_energy_cesm"
+  output_sub:       "data/outputs/synthetic_subtracted_cesm"
+
+cyclegan:
+  device:            "cuda"
+  image_size:        128
+  batch_size:        1
+  epochs:            20
+  lr:                0.0002
+  lambda_cycle:      10.0
+  lambda_semantic:   5.0
+  lambda_identity:   1.0
+  lambda_gp:         10.0
+  debug_max_samples: 500
+  sample_interval:   120
+  model_path:        "data/outputs/checkpoints/G_epoch_0.pth"
+
+  # Generator kwargs (match your ResnetGenerator signature)
+  gen_params:
+    input_nc:       1
+    output_nc:      1
+    ngf:            64
+    norm_layer:     "instance"
+    use_dropout:    false
+    n_blocks:       9
+
+  # Discriminator kwargs
+  disc_params:
+    input_nc:       1
+    ndf:            64
+    n_layers:       3
+
+unet_gan:
+  device:            "cuda"
+  image_size:        128
+  batch_size:        1
+  epochs:            4
+  lr:                0.0002
+  lambda_l1:         10.0
+  lambda_semantic:   5.0
+  lambda_dino:       0.1
+  sample_interval:   120
+  checkpoints:       "data/outputs/checkpoints_unet"
+  output_samples:    "data/outputs/synthetic_subtracted_cesm"
+
+  # Generator kwargs (match your UNetGenerator signature)
+  gen_params:
+    in_channels:    1
+    out_channels:   1
+    features:       [64, 128, 256]
+
+  # Discriminator kwargs
+  disc_params:
+    input_nc:       1
+    ndf:            64
+
+dinov2:
+  model_name:  "facebook/dinov2-base"
+  local_cache: "core/cache/dinov2-base"
+
+coupling:
+  weight:           0.5
